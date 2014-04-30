@@ -1,0 +1,28 @@
+from django.db import models
+from commonssite.server.timeseries.models import TimeseriesBase
+
+class WeatherData(TimeseriesBase):
+	uv = models.FloatField()
+	barometer = models.FloatField()
+	dayet = models.FloatField()
+	dayrain = models.FloatField()
+	dewpoint = models.FloatField()
+	heatindex = models.FloatField()
+	inhumidity = models.FloatField()
+	intemp = models.FloatField(verbose_name=u'Temperature Inside (at console)')
+	monthet = models.FloatField()
+	monthrain = models.FloatField()
+	outhumidity = models.FloatField()
+	outtemp = models.FloatField(verbose_name=u'Temperature Outside')
+	radiation = models.FloatField()
+	rain = models.FloatField(null=True)
+	rainrate = models.FloatField()
+	stormrain = models.FloatField()
+	stormstart = models.FloatField(null=True)
+	sunrise = models.FloatField()
+	sunset = models.FloatField()
+	winddir = models.FloatField(null=True)
+	windspeed = models.FloatField()
+	windchill = models.FloatField()
+	yearet = models.FloatField()
+	yearrain = models.FloatField()

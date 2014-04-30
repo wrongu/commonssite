@@ -1,0 +1,44 @@
+<!-- DateRange.html -->
+{% load static %}
+<script src="{% static "timeseries/js/moment.min.js" %}"></script>
+<script src="{% static "timeseries/js/daterangepicker.js" %}"></script>
+<link rel="stylesheet" href="{% static "timeseries/css/daterangepicker-bs3.css " %}" />
+<div class="well">
+	<form class="form-horizontal">
+		<fieldset>
+			<div class="control-group">
+				<label class="control-label" for="datarangetime">Choose start and end times</label>
+				<div class="controls">
+					<div class="input-prepend input-group">
+						<span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+						<input type="text" style="width: 400px" name="datarange" id="datarangetime" class="form-control"  class="span4"/>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+</div>
+<script>
+$(function(){
+	$('#datarangetime').daterangepicker({
+		forceParse: true,
+		timePicker: true,
+		timePickerIncrement: 15,
+		format: 'MM/DD/YYYY h:mm A',
+	});
+
+	var daterange = $('#datarangetime').eq(0).data('daterangepicker');
+	// extending the Commons object with daterange functionality
+	Commons.daterange = function(){
+		if(daterange.startDate == null || daterange.endDate == null){
+			console.log('BAD FORM: cannot deal with null datetime');
+			return;
+		}
+
+		return [daterange.startDate, daterange.endDate];
+	}
+	daterange.updateInputText(); // force update of input text when page loads
+});
+
+</script>
+<!-- end DateRange.html -->

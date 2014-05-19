@@ -59,6 +59,12 @@ class TimeseriesBase(models.Model):
 		"""
 		return (cls.objects.order_by('-Time')[0]).Time
 
+	def index(self):
+		"""return a tuple of index (header) values for this object
+		"""
+		vals = [self.__dict__[head] for head in self.get_header_names() if head != 'Time']
+		return tuple(vals) 
+
 	class Meta:
 		abstract = True
 

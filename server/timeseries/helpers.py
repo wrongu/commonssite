@@ -2,6 +2,12 @@ from timeseries.models import ModelRegistry
 import dateutil.parser
 from dateutil.tz import tzlocal
 
+# refer to https://docs.djangoproject.com/en/dev/ref/models/fields/#field-types
+model_types = {
+	'numeric' : [u'FloatField', u'IntegerField', u'BigIntegerField', u'DecimalField', u'PositiveIntegerField', u'PositiveSmallIntegerField', u'SmallIntegerField' ],
+	'string' : [u'CharField', u'BooleanField', u'TextField']
+}
+
 def systems_dict():
 	"""construct and return a json object describing the different systems with available timeseries data. Note that no actual data is returned.
 	A 'system' is something like 'HVAC' or 'Electric', and a subsystem is, for example, VRF within HVAC
@@ -27,11 +33,6 @@ def systems_dict():
 		}, ...
 	}
 	"""
-	# refer to https://docs.djangoproject.com/en/dev/ref/models/fields/#field-types
-	model_types = {
-		'numeric' : [u'FloatField', u'IntegerField', u'BigIntegerField', u'DecimalField', u'PositiveIntegerField', u'PositiveSmallIntegerField', u'SmallIntegerField' ],
-		'string' : [u'CharField', u'BooleanField', u'TextField']
-	}
 	systems = {}
 	# start with the ModelRegistry - that's where we keep track of models and scrapers
 	for registry in ModelRegistry.objects.all():
@@ -54,6 +55,19 @@ def systems_dict():
 			'units' : {} # TODO
 		}
 	return systems
+
+def split_on_indexes(queryset):
+	"""given a queryset of TimeseriesBase objects, return a dict mapping from each unique index to the list of
+	objects which share that index"""
+	index_lookup = {}
+	for obj in queryset:
+		ind = obj.index() # index() method is defined in TimeseriesBase. it returns a tuple of index values
+		index_lookup[ind] = index_lookup.get(ind, []) + [obj] # append the current object to this list
+	return index_lookup
+
+def timedelta_seconds(timedelta):
+	"""get the total seconds in a timedelta object"""
+	return timedelta.days * 86400 + timedelta.seconds
 
 model_cache = {}
 def get_registered_model(class_path):

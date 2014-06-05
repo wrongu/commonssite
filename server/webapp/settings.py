@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os, sys
-from commonssite.private import DJANGO_SECRET_KEY
+from commonssite.private import DJANGO_SECRET_KEY, epass
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 sys.path.insert(0,os.path.join(BASE_DIR, 'weather'))
@@ -21,8 +21,11 @@ sys.path.insert(0,os.path.join(BASE_DIR, 'weather'))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = DJANGO_SECRET_KEY
 
+# PATCH TO SERVE STATICFILES WOTH DEBUG FALSE
+urlpatterns += staticfiles_urlpatterns()
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 TEMPLATE_DEBUG = True
 
@@ -30,8 +33,9 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'static/templates/'),
 )
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
+ADMINS = (("Max", "max.bednarcyk@gmail.com"))
 
 # Application definition
 
@@ -112,6 +116,18 @@ USE_L10N = True
 
 USE_TZ = True
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# Host for sending e-mail.
+EMAIL_HOST = 'smtp.gmail.com'
+
+# Port for sending e-mail.
+EMAIL_PORT = 587
+
+# Optional SMTP authentication information for EMAIL_HOST.
+EMAIL_HOST_USER = 'commonscontrolserver@gmail.com'
+EMAIL_HOST_PASSWORD = epass
+EMAIL_USE_TLS = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
